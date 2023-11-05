@@ -3,15 +3,20 @@ package main
 import (
 	"context"
 	"log"
+	"net/http"
 	"time"
 
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Real estate module
 
-type estate struct {
+type Estate struct {
 	ID        primitive.ObjectID     `json:"_id,omitempty" bson:"_id,omitempty"`
 	TITLE     string                 `json:"title,omitempty" bson:"title,omitempty"`
 	OwnerID   primitive.ObjectID     `json:"owner_id,omitempty" bson:"owner_id,omitempty"`
@@ -31,17 +36,18 @@ type Owner struct {
 	Email string             `json:"email,omitempty" bson:"email,omitempty"`
 }
 
-const {
-	Connectionstring = "mongodb+srv://moh:<password>@cluster0.7jqhbon.mongodb.net/?retryWrites=true&w=majority"
-	DbName = "yt"
-	CollectionName = "estate"
-}
+const (
+	ConnectionString = "mongodb+srv://moh:<password>@cluster0.7jqhbon.mongodb.net/?retryWrites=true&w=majority"
+	DbName           = "yt"
+	EstateCollection = "estate"
+	OwnerCollection  = "owner"
+)
 
 var db *mongo.Database
 
-func init(){
-	clinetOptions := options.Client().ApplytURI(ConnectionString)
-	client,err := mongo.NewClient(clientOptions)
+func init() {
+	clientOptions := options.Client().ApplyURI(ConnectionString)
+	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -52,39 +58,85 @@ func init(){
 	db = client.Database(DbName)
 }
 
-func main(){
+func main() {
 	r := gin.Default()
 
-	r.Use(cors.Default())
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AddAllowHeaders("Authorization")
+	r.Use(cors.New(config))
 
-	r.GET("/api/estate",getEstate)
-	r.GET("/api/estate/:id",getEstateById)
-	r.POST("/api/estate",addEstate)
+	r.GET("/api/estate", getEstate)
+	r.GET("/api/estate/:id", getEstateByID)
+	r.POST("/api/estate", addEstate)
 	r.PUT("/api/estate/:id", updateEstate)
-	r.DELETE("/apt/estate/:id", deleteEstate)
+	r.DELETE("/api/estate/:id", deleteEstate)
 
 	r.Run(":8000")
 }
 
-
-func getEstate(c *gin.context){
-
-	cursor, err = db.Collection("estate").Find(context.Background(),bson.D())
-
-	if err != nil [
+func getEstate(c *gin.Context) {
+	cursor, err := db.Collection(EstateCollection).Find(context.Background(), bson.D{})
+	if err != nil {
 		log.Fatal(err)
-	]
+	}
 
-	var estate []estate
+	var estates []Estate
 
-	for cursor.Next(context.Background()){
-		var employee employee
-		if err := cursor.Decode(&estate); err != nil {
+	for cursor.Next(context.Background()) {
+		var est Estate
+		if err := cursor.Decode(&est); err != nil {
 			log.Fatal(err)
 		}
-		estates = append(estates,estate)
+		estates = append(estates, est)
 	}
 
 	cursor.Close(context.Background())
-	c.JSON(http.StatusOK, employees)
+	c.JSON(http.StatusOK, estates)
+}
+
+func getEstateByID(c *gin.Context) {
+	id, _ := primitive.ObjectIDFromHex(c.Param("_id"))
+
+	var Est Estate
+	if err := db.Collection(EstateCollection).FindOne(context.Background(), bson.M{"_id": id}).Decode(&Est); err != nil {
+		log.Fatal(err)
+	}
+	c.JSON(http.StatusOK, Est)
+}
+
+func addEstate(c *gin.Context) {
+	var Est Estate
+
+	if err := c.BindJSON(&Est); err != nil {
+		log.Fatal(err)
+	}
+
+	result, err := db.Collection(EstateCollection).InsertOne(context.Background(), Est)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.JSON(http.StatusOK, result)
+}
+
+func updateEstate(c *gin.Context) {
+	id, _ := primitive.ObjectIDFromHex(c.Param("_id"))
+	var Est Estate
+
+	if err := c.BindJSON(&Est); err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	update := bson.M{"$set": Est}
+	filter := bson.M{"_id": id}
+	_, err := db.Collection(EstateCollection).UpdateOne(context.Background(), filter, update)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Estate updated successfully"})
 }
