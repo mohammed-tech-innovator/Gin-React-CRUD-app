@@ -1,0 +1,30 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .content-container {
+    display: flex;
+    flex: 1;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 160px;
+    margin-left: 20px;
+    /* Add any other styling you need */
+  }
+  
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* Add styling for the card container */
+  }
+  
+  .navbar {
+    position: fixed;
+    top:0;
+    z-index: 1;
+    width: 100%;
+  }
