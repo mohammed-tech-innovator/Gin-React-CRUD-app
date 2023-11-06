@@ -23,6 +23,9 @@ func main() {
 	router.POST("/api/estate", handelers.AddEstate)
 	router.PUT("/api/estate/:id", handelers.UpdateEstate)
 	router.DELETE("/api/estate/:id", handelers.DeleteEstate)
+	router.GET("/api/owner/:id", handelers.GetOwnerByID)
+	router.GET("/api/owner/", handelers.GetOwners)
+	router.GET("/api/estatebyownerid/:id", handelers.GetEstatesByOwnerID)
 
 	router.Run("localhost:8000")
 }

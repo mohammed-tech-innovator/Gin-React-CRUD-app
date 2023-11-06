@@ -9,7 +9,7 @@ import (
 type Estate struct {
 	ID        primitive.ObjectID     `json:"_id" bson:"_id"`
 	TITLE     string                 `json:"title,omitempty" bson:"title,omitempty"`
-	OwnerID   primitive.ObjectID     `json:"owner_id,omitempty" bson:"owner_id,omitempty"`
+	OwnerID   primitive.ObjectID     `json:"owner_id" bson:"owner_id"`
 	Latitude  float64                `json:"latitude,omitempty" bson:"latitude,omitempty"`
 	Longitude float64                `json:"longitude,omitempty" bson:"longitude,omitempty"`
 	Price     float64                `json:"price,omitempty" bson:"price,omitempty"`

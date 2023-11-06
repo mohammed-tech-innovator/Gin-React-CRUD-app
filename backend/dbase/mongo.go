@@ -10,9 +10,9 @@ import (
 
 const (
 	ConnectionString = "mongodb+srv://moh:<>@cluster0.7jqhbon.mongodb.net/?retryWrites=true&w=majority"
-	DbName           = "cluster0"
-	EstateCollection = "estate"
-	OwnerCollection  = "owner"
+	DbName           = "realstateapp"
+	EstateCollection = "Estate"
+	OwnerCollection  = "Owner"
 )
 
 var DB *mongo.Database
