@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func Start(c *gin.Context) {
@@ -45,11 +46,21 @@ func GetEstate(c *gin.Context) {
 }
 
 func GetEstateByID(c *gin.Context) {
-	id, _ := primitive.ObjectIDFromHex(c.Param("_id"))
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid ID"})
+		return
+	}
 
 	var Est dbase.Estate
-	if err := dbase.DB.Collection(dbase.EstateCollection).FindOne(context.Background(), bson.M{"_id": id}).Decode(&Est); err != nil {
-		log.Fatal(err)
+	err = dbase.DB.Collection(dbase.EstateCollection).FindOne(context.Background(), bson.M{"_id": id}).Decode(&Est)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Estate not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Error fetching estate"})
+		return
 	}
 	c.JSON(http.StatusOK, Est)
 }

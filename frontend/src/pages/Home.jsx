@@ -24,7 +24,10 @@ export default function Home() {
 
             <Navbar com_name = {"Buyut"} logo ={"https://th.bing.com/th/id/OIP.l590m8rOs0GW_XV2hHgRYAHaHa?pid=ImgDet&rs=1"}/>
 
+            <Carousal/>
+
             <Card items = {estates} />
+            <Footer />
 
         </div>
 

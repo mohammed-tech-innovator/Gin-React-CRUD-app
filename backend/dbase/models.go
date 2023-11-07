@@ -24,4 +24,14 @@ type Owner struct {
 	ID    primitive.ObjectID `json:"_id" bson:"_id"`
 	Name  string             `json:"name,omitempty" bson:"name,omitempty"`
 	Email string             `json:"email,omitempty" bson:"email,omitempty"`
+	Photo string             `json:"photo,omitempty" bson:"photo,omitempty"`
+	Phone string             `json:"phone,omitempty" bson:"phone,omitempty"`
+}
+
+type Metadata struct {
+	ID       primitive.ObjectID `json:"_id" bson:"_id"`
+	Name     string             `json:"name,omitempty" bson:"name,omitempty"`
+	Email    string             `json:"email,omitempty" bson:"email,omitempty"`
+	Logo     string             `json:"logo,omitempty" bson:"logo,omitempty"`
+	Carousal []string           `json:"carousal,omitempty" bson:"carousal,omitempty"`
 }

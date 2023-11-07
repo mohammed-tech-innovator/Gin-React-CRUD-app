@@ -13,6 +13,7 @@ const (
 	DbName           = "realstateapp"
 	EstateCollection = "Estate"
 	OwnerCollection  = "Owner"
+	MetaCollection   = "Meta"
 )
 
 var DB *mongo.Database

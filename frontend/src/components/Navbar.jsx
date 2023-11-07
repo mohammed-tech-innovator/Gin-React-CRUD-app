@@ -12,7 +12,7 @@ export default function Navbar(params) {
                 <div className="container-fluid">
                     
                     <a className="navbar-brand"><img style ={logo_style} src = {params.logo}/><span> </span>{params.com_name}</a>
-                    <form className="d-flex" method="POST" action="http:localhost:8000/search/">
+                    <form className="d-flex" method="POST" action={window.homeRoute}>
                         <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
                         <button className="btn btn-outline-success" type="submit">Search</button>
                     </form>

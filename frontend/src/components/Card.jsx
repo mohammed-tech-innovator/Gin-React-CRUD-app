@@ -23,7 +23,7 @@ export default function Card(props) {
                         </div>
 
 
-                        <a href={item.link} className="btn btn-primary">Go somewhere</a>
+                        <a href={"/estate/" + item._id} className="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
             </div>
