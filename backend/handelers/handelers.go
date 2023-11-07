@@ -3,6 +3,7 @@ package handelers
 import (
 	"backend/dbase"
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -126,4 +127,9 @@ func GetEstatesByOwnerID(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, estates)
+}
+
+func SearchEstate(c *gin.Context) {
+
+	fmt.Print("Im called")
 }
