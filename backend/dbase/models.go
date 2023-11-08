@@ -21,11 +21,22 @@ type Estate struct {
 }
 
 type Owner struct {
-	ID    primitive.ObjectID `json:"_id" bson:"_id"`
-	Name  string             `json:"name,omitempty" bson:"name,omitempty"`
-	Email string             `json:"email,omitempty" bson:"email,omitempty"`
-	Photo string             `json:"photo,omitempty" bson:"photo,omitempty"`
-	Phone string             `json:"phone,omitempty" bson:"phone,omitempty"`
+	ID         primitive.ObjectID `json:"_id" bson:"_id"`
+	Name       string             `json:"name,omitempty" bson:"name,omitempty"`
+	Email      string             `json:"email,omitempty" bson:"email,omitempty"`
+	Photo      string             `json:"photo,omitempty" bson:"photo,omitempty"`
+	Mobile     string             `json:"mobile,omitempty" bson:"mobile,omitempty"`
+	Phone      string             `json:"phone,omitempty" bson:"phone,omitempty"`
+	Website    string             `json:"website,omitempty" bson:"website,omitempty"`
+	X          string             `json:"x,omitempty" bson:"x,omitempty"`
+	Instagram  string             `json:"instagram,omitempty" bson:"instagram,omitempty"`
+	Facebook   string             `json:"facebook,omitempty" bson:"facebook,omitempty"`
+	Address    string             `json:"address,omitempty" bson:"address,omitempty"`
+	AvgPrice   float64            `json:"avgprice,omitempty" bson:"avgprice,omitempty"`
+	NumOfEst   uint32             `json:"numofest,omitempty" bson:"numofest,omitempty"`
+	Bio        string             `json:"bio,omitempty" bson:"bio,omitempty"`
+	Rating     float64            `json:"rating,omitempty" bjson:"rating,omitempty" `
+	AvgResTime float64            `json:"avgrestim,omitempty" bson:"avgrestim,omitempty"`
 }
 
 type Metadata struct {

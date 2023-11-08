@@ -5,24 +5,25 @@ import Profile from "../components/Profile";
 
 
 
-export default function Estate(props){
+export default function Owner(props){
 
     const urlparam = useParams();
     const id = urlparam.id;
-    console.log(id)
-    const [estate,setData] = useState([])
+    
+    const [owner ,setData] = useState([])
     useEffect(() => {
-        axios.get(`http://localhost:8000//owner/${id}`)
+        axios.get(`http://localhost:8000/owner/${id}`)
         .then(res => setData(res.data))
         .catch(err => console.log(err));
     },[]);
 
 
 
+
     return(
         <div>
 
-            <Profile/>
+            <Profile onr={owner}/>
             
             
         </div>
