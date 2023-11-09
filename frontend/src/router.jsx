@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Estate from "./pages/Estate";
 import NoPage from "./pages/NoPage";
 import Owner from "./pages/Owner"
+import Owners from "./pages/owners";
 
 const router = createBrowserRouter(
     [
@@ -26,7 +27,12 @@ const router = createBrowserRouter(
                 path:"/owner/:id",
                 element: <Owner/>,
 
-            }
+            },
+            {
+                path:"/owners/",
+                element: <Owners/>,
+
+            },
         ],
         },
         {
