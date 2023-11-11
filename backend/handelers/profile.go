@@ -6,14 +6,20 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func ReadProfile(c *gin.Context) {
-	id := c.Param("id")
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+	}
 
 	var user dbase.User
 
-	result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), gin.H{"_id": id})
+	result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), bson.M{"_id": id})
 
 	if err := result.Decode(&user); err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
@@ -25,7 +31,12 @@ func ReadProfile(c *gin.Context) {
 }
 
 func UpdateProfile(c *gin.Context) {
-	id := c.Param("id")
+
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+	}
 
 	var user dbase.User
 
@@ -34,7 +45,7 @@ func UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	result, err := dbase.DB.Collection(dbase.UserCollection).UpdateOne(context.Background(), gin.H{"_id": id}, user)
+	result, err := dbase.DB.Collection(dbase.UserCollection).UpdateOne(context.Background(), bson.M{"_id": id}, user)
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
@@ -44,9 +55,14 @@ func UpdateProfile(c *gin.Context) {
 }
 
 func DelProfile(c *gin.Context) {
-	id := c.Param("id")
 
-	result, err := dbase.DB.Collection(dbase.UserCollection).DeleteOne(context.Background(), gin.H{"_id": id})
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+	}
+
+	result, err := dbase.DB.Collection(dbase.UserCollection).DeleteOne(context.Background(), bson.M{"_id": id})
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})

@@ -7,7 +7,7 @@ import (
 )
 
 type User struct {
-	ID        primitive.ObjectID `json:"_id" bson:"_id"`
+	ID        primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	Email     string             `json:"email,omitempty" bson:"email,omitempty" validate:"email,required"`
 	Photo     string             `json:"photo,omitempty" bson:"photo,omitempty"`
 	Password  string             `json:"password,omitempty" bson:"password,omitempty" validate:"required, min=6, max=100"`
@@ -18,7 +18,7 @@ type User struct {
 }
 
 type Note struct {
-	ID        primitive.ObjectID `json:"_id" bson:"_id"`
+	ID        primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	OwnerID   primitive.ObjectID `json:"owner_id" bson:"owner_id"`
 	Title     string             `json:"title,omitempty" bson:"title,omitempty" validate:"required, min=2, max=100"`
 	Content   string             `json:"content,omitempty" bson:"content,omitempty" validate:"required, min=2, max=100"`
@@ -28,6 +28,6 @@ type Note struct {
 }
 
 type Meta struct {
-	ID       primitive.ObjectID `json:"_id" bson:"_id"`
+	ID       primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	SiteName string             `json:"title,omitempty" bson:"title,omitempty"`
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,29 +27,45 @@ func SingUp(c *gin.Context) {
 		Email    string
 	}
 
-	if c.Bind(&content) != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Failed to match input data."})
+	if err := c.ShouldBind(&content); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
+	} else {
+
+		cout, err := dbase.DB.Collection(dbase.UserCollection).CountDocuments(context.Background(), bson.M{"email": content.Email})
+		if err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+			return
+		} else if cout > 0 {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "This Email is already used."})
+			return
+		} else {
+			hash, err := bcrypt.GenerateFromPassword([]byte(content.Password), 10)
+
+			if err != nil {
+				c.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": err.Error()})
+				return
+			} else {
+
+				var user dbase.User = dbase.User{
+					Fname:     content.Fname,
+					Lname:     content.Lname,
+					Email:     content.Email,
+					Password:  string(hash),
+					CreatedAt: time.Now(),
+				}
+
+				result, err := dbase.DB.Collection(dbase.UserCollection).InsertOne(context.Background(), user)
+				if err != nil {
+					c.IndentedJSON(http.StatusNotImplemented, gin.H{"err": err.Error()})
+					return
+				} else {
+					c.JSON(http.StatusCreated, result)
+					return
+				}
+			}
+		}
 	}
-
-	hash, err := bcrypt.GenerateFromPassword([]byte(content.Password), 10)
-
-	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": err})
-		return
-	}
-
-	user := dbase.User{Email: content.Email, Fname: content.Fname,
-		Lname: content.Lname, Password: string(hash), CreatedAt: time.Now()}
-
-	result, err := dbase.DB.Collection(dbase.UserCollection).InsertOne(context.Background(), user)
-	if err != nil {
-		c.IndentedJSON(http.StatusNotImplemented, gin.H{"err": err})
-		return
-	}
-
-	c.JSON(http.StatusCreated, result)
-
 }
 
 func LogIn(c *gin.Context) {
