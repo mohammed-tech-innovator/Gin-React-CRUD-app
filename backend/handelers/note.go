@@ -52,7 +52,7 @@ func ReadNote(c *gin.Context) {
 
 	var note dbase.Note
 
-	result := dbase.DB.Collection(dbase.NoteCollection).FindOne(context.Background(), bson.D{{"_id", id}})
+	result := dbase.DB.Collection(dbase.NoteCollection).FindOne(context.Background(), gin.H{"_id": id})
 
 	if err := result.Decode(&note); err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
@@ -73,7 +73,7 @@ func UpdateNote(c *gin.Context) {
 		return
 	}
 
-	result, err := dbase.DB.Collection(dbase.NoteCollection).UpdateOne(context.Background(), bson.D{{"_id", id}}, note)
+	result, err := dbase.DB.Collection(dbase.NoteCollection).UpdateOne(context.Background(), gin.H{"_id": id}, note)
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
@@ -86,7 +86,7 @@ func UpdateNote(c *gin.Context) {
 func DelNote(c *gin.Context) {
 	id := c.Param("id")
 
-	result, err := dbase.DB.Collection(dbase.NoteCollection).DeleteOne(context.Background(), bson.D{{"_id", id}})
+	result, err := dbase.DB.Collection(dbase.NoteCollection).DeleteOne(context.Background(), gin.H{"_id": id})
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})

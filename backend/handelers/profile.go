@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func ReadProfile(c *gin.Context) {
@@ -14,10 +13,11 @@ func ReadProfile(c *gin.Context) {
 
 	var user dbase.User
 
-	result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), bson.D{{"_id", id}})
+	result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), gin.H{"_id": id})
 
 	if err := result.Decode(&user); err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
+		return
 	}
 
 	c.IndentedJSON(http.StatusOK, user)
@@ -34,7 +34,7 @@ func UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	result, err := dbase.DB.Collection(dbase.UserCollection).UpdateOne(context.Background(), bson.D{{"_id", id}}, user)
+	result, err := dbase.DB.Collection(dbase.UserCollection).UpdateOne(context.Background(), gin.H{"_id": id}, user)
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
@@ -46,10 +46,11 @@ func UpdateProfile(c *gin.Context) {
 func DelProfile(c *gin.Context) {
 	id := c.Param("id")
 
-	result, err := dbase.DB.Collection(dbase.UserCollection).DeleteOne(context.Background(), bson.D{{"_id", id}})
+	result, err := dbase.DB.Collection(dbase.UserCollection).DeleteOne(context.Background(), gin.H{"_id": id})
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
+		return
 	}
 
 	c.IndentedJSON(http.StatusOK, result)
