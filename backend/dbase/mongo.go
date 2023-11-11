@@ -3,22 +3,28 @@ package dbase
 import (
 	"context"
 	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
-	ConnectionString = "mongodb+srv://moh:<>@cluster0.7jqhbon.mongodb.net/?retryWrites=true&w=majority"
-	DbName           = "realstateapp"
-	EstateCollection = "Estate"
-	OwnerCollection  = "Owner"
-	MetaCollection   = "Meta"
+	DbName         = "CRUD"
+	UserCollection = "User"
+	NoteCollection = "Note"
+	MetaCollection = "Meta"
 )
 
 var DB *mongo.Database
+var ConnectionString string
 
 func init() {
+
+	godotenv.Load("./.env")
+	ConnectionString = os.Getenv("DBCON")
+
 	clientOptions := options.Client().ApplyURI(ConnectionString)
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
