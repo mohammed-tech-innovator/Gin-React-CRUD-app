@@ -42,14 +42,13 @@ func Note(c *gin.Context) {
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
-	}
-
-	if err := result.All(context.Background(), &notes); err != nil {
+	} else if err := result.All(context.Background(), &notes); err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
+	} else {
+		c.IndentedJSON(http.StatusOK, notes)
+		return
 	}
-
-	c.IndentedJSON(http.StatusOK, notes)
 }
 
 func ReadNote(c *gin.Context) {
@@ -57,19 +56,17 @@ func ReadNote(c *gin.Context) {
 
 	if err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+	} else {
+		var note dbase.Note
+		result := dbase.DB.Collection(dbase.NoteCollection).FindOne(context.Background(), bson.M{"_id": id})
+		if err := result.Decode(&note); err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
+			return
+		} else {
+			c.IndentedJSON(http.StatusOK, note)
+			return
+		}
 	}
-
-	var note dbase.Note
-
-	result := dbase.DB.Collection(dbase.NoteCollection).FindOne(context.Background(), bson.M{"_id": id})
-
-	if err := result.Decode(&note); err != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
-		return
-	}
-
-	c.IndentedJSON(http.StatusOK, note)
-
 }
 
 func UpdateNote(c *gin.Context) {

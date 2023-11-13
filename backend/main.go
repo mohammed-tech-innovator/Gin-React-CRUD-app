@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/handelers"
+	"backend/helpers"
 	"os"
 
 	"github.com/gin-contrib/cors"
@@ -35,5 +36,8 @@ func main() {
 	router.DELETE("/note/:id", handelers.DelNote)
 
 	PORT := os.Getenv("PORT")
+
+	helpers.StartNotification()
+
 	router.Run("localhost:" + PORT)
 }
