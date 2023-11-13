@@ -38,6 +38,11 @@ func main() {
 	PORT := os.Getenv("PORT")
 
 	helpers.StartNotification()
+	//helpers.EmailVerification("Mohammed", os.Getenv("MyEmail"), "google.com")
 
-	router.Run("localhost:" + PORT)
+	err := router.Run("localhost:" + PORT)
+
+	if err != nil {
+		helpers.TerminationNotification(err)
+	}
 }

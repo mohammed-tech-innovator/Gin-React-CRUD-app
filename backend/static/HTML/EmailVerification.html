@@ -340,7 +340,7 @@ ul.social li{
 	      </tr><!-- end tr -->
 	      <tr>
           <td valign="middle" class="hero bg_white" style="padding: 3em 0 2em 0;">
-            <img src="../images/email.png" alt="" style="width: 300px; max-width: 600px; height: auto; margin: auto; display: block;">
+            <img src="https://github.com/ColorlibHQ/email-templates/blob/master/10/images/email.png?raw=true" alt="" style="width: 300px; max-width: 600px; height: auto; margin: auto; display: block;">
           </td>
 	      </tr><!-- end tr -->
 				<tr>
@@ -349,9 +349,10 @@ ul.social li{
             	<tr>
             		<td>
             			<div class="text" style="padding: 0 2.5em; text-align: center;">
-            				<h2>Please verify your email</h2>
+            				<h2>{{.Name}} Please verify your email</h2>
+							<h3>{{.Email}}</h3>
             				<h3>Amazing deals, updates, interesting news right in your inbox</h3>
-            				<p><a href="#" class="btn btn-primary">Yes! Subscribe Me</a></p>
+            				<p><a href={{.Url}} class="btn btn-primary">Click here to verify</a></p>
             			</div>
             		</td>
             	</tr>
