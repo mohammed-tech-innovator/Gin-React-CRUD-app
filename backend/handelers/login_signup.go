@@ -2,7 +2,9 @@ package handelers
 
 import (
 	"backend/dbase"
+	"backend/helpers"
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -48,11 +50,12 @@ func SingUp(c *gin.Context) {
 			} else {
 
 				var user dbase.User = dbase.User{
-					Fname:     content.Fname,
-					Lname:     content.Lname,
-					Email:     content.Email,
-					Password:  string(hash),
-					CreatedAt: time.Now(),
+					Fname:         content.Fname,
+					Lname:         content.Lname,
+					Email:         content.Email,
+					Password:      string(hash),
+					CreatedAt:     time.Now(),
+					EmailVerified: false,
 				}
 
 				result, err := dbase.DB.Collection(dbase.UserCollection).InsertOne(context.Background(), user)
@@ -60,6 +63,10 @@ func SingUp(c *gin.Context) {
 					c.IndentedJSON(http.StatusNotImplemented, gin.H{"err": err.Error()})
 					return
 				} else {
+					url := fmt.Sprintf("%sverify-email/%v", os.Getenv("ROOTURL"), user.Email)
+					helpers.EmailVerification(fmt.Sprintf(user.Fname+" "+user.Lname), user.Email,
+						url)
+
 					c.JSON(http.StatusCreated, result)
 					return
 				}
@@ -82,7 +89,7 @@ func LogIn(c *gin.Context) {
 		return
 	}
 
-	result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), gin.H{"Email": content.Email})
+	result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), gin.H{"email": content.Email})
 	if err := result.Decode(&user); err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
 		return
@@ -104,5 +111,24 @@ func LogIn(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"token": tokenString,
 	})
+
+}
+
+func VerifyEmail(c *gin.Context) {
+
+	email := c.Param("email")
+
+	result, err := dbase.DB.Collection(dbase.UserCollection).UpdateOne(
+		context.Background(),
+		bson.M{"email": email},
+		bson.M{"$set": bson.M{"emailverified": true}},
+	)
+
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		return
+	} else {
+		c.IndentedJSON(http.StatusAccepted, gin.H{"result": result})
+	}
 
 }

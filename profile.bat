@@ -2,10 +2,10 @@
 setlocal enabledelayedexpansion
 
 REM Define the JSON data as variables
-set "Fname=Reem"
+set "Fname=Mohammed"
 set "Lname=Yousif"
-set "Password=checken"
-set "Email=Reem@gmail.com"
+set "Password=greatman"
+set "Email=mohammed.yah.yousif@gmail.com"
 
 REM Create a JSON string using the defined variables
 set "jsonData={\"Fname\":\"!Fname!\",\"Lname\":\"!Lname!\",\"Password\":\"!Password!\",\"Email\":\"!Email!\"}"

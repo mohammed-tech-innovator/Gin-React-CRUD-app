@@ -35,10 +35,11 @@ func main() {
 	router.PUT("/note/:id", handelers.UpdateNote)
 	router.DELETE("/note/:id", handelers.DelNote)
 
+	router.GET("/verify-email/:email", handelers.VerifyEmail)
+
 	PORT := os.Getenv("PORT")
 
 	helpers.StartNotification()
-	//helpers.EmailVerification("Mohammed", os.Getenv("MyEmail"), "google.com")
 
 	err := router.Run("localhost:" + PORT)
 
