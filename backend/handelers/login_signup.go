@@ -66,14 +66,34 @@ func SingUp(c *gin.Context) {
 					c.IndentedJSON(http.StatusNotImplemented, gin.H{"err": err.Error()})
 					return
 				} else {
-					emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("SECRET"), user.Email)))
+					emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("VERKEY"), user.Email)))
 					encodedHash := base64.URLEncoding.EncodeToString(emailHashed[:])
 					url := fmt.Sprintf("%sverify-email/%v/%v", os.Getenv("ROOTURL"), encodedHash, user.Email)
 					helpers.EmailVerification(fmt.Sprintf(user.Fname+" "+user.Lname), user.Email,
 						url)
 
-					c.JSON(http.StatusCreated, result)
-					return
+					token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+						"sub": user.ID,
+						"exp": time.Now().Add(time.Hour).Unix(),
+					})
+
+					tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
+
+					if err != nil {
+						c.JSON(http.StatusInternalServerError, gin.H{
+							"Error": err.Error(),
+						})
+						return
+
+					} else {
+
+						c.JSON(http.StatusOK, gin.H{
+							"token":  tokenString,
+							"result": result,
+						})
+						return
+					}
+
 				}
 			}
 		}
@@ -111,7 +131,7 @@ func LogIn(c *gin.Context) {
 		"exp": time.Now().Add(time.Hour).Unix(),
 	})
 
-	tokenString, err := token.SignedString(os.Getenv("SECRET"))
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 
 	c.JSON(http.StatusOK, gin.H{
 		"token": tokenString,
@@ -124,7 +144,7 @@ func VerifyEmail(c *gin.Context) {
 	hash := c.Param("hash")
 	email := c.Param("email")
 
-	emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("SECRET"), email)))
+	emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("VERKEY"), email)))
 	encodedHash := base64.URLEncoding.EncodeToString(emailHashed[:])
 
 	if subtle.ConstantTimeCompare([]byte(hash), []byte(encodedHash)) == 1 {
