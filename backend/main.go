@@ -35,7 +35,7 @@ func main() {
 	router.PUT("/note/:id", handelers.UpdateNote)
 	router.DELETE("/note/:id", handelers.DelNote)
 
-	router.GET("/verify-email/:email", handelers.VerifyEmail)
+	router.GET("/verify-email/:hash/:email", handelers.VerifyEmail)
 
 	PORT := os.Getenv("PORT")
 

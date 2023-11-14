@@ -4,6 +4,9 @@ import (
 	"backend/dbase"
 	"backend/helpers"
 	"context"
+	"crypto/sha256"
+	"crypto/subtle"
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"os"
@@ -63,7 +66,9 @@ func SingUp(c *gin.Context) {
 					c.IndentedJSON(http.StatusNotImplemented, gin.H{"err": err.Error()})
 					return
 				} else {
-					url := fmt.Sprintf("%sverify-email/%v", os.Getenv("ROOTURL"), user.Email)
+					emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("SECRET"), user.Email)))
+					encodedHash := base64.URLEncoding.EncodeToString(emailHashed[:])
+					url := fmt.Sprintf("%sverify-email/%v/%v", os.Getenv("ROOTURL"), encodedHash, user.Email)
 					helpers.EmailVerification(fmt.Sprintf(user.Fname+" "+user.Lname), user.Email,
 						url)
 
@@ -116,19 +121,29 @@ func LogIn(c *gin.Context) {
 
 func VerifyEmail(c *gin.Context) {
 
+	hash := c.Param("hash")
 	email := c.Param("email")
 
-	result, err := dbase.DB.Collection(dbase.UserCollection).UpdateOne(
-		context.Background(),
-		bson.M{"email": email},
-		bson.M{"$set": bson.M{"emailverified": true}},
-	)
+	emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("SECRET"), email)))
+	encodedHash := base64.URLEncoding.EncodeToString(emailHashed[:])
 
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
-		return
+	if subtle.ConstantTimeCompare([]byte(hash), []byte(encodedHash)) == 1 {
+
+		result, err := dbase.DB.Collection(dbase.UserCollection).UpdateOne(
+			context.Background(),
+			bson.M{"email": email},
+			bson.M{"$set": bson.M{"emailverified": true}},
+		)
+
+		if err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+			return
+		} else {
+			c.IndentedJSON(http.StatusAccepted, gin.H{"result": result})
+		}
+
 	} else {
-		c.IndentedJSON(http.StatusAccepted, gin.H{"result": result})
+		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"Error": fmt.Sprintf("Your access has been denaied%v : %v", hash, emailHashed)})
 	}
 
 }
