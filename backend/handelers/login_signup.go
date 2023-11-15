@@ -109,33 +109,39 @@ func LogIn(c *gin.Context) {
 
 	var user dbase.User
 
-	if c.Bind(&content) != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Failed to match input data."})
+	if err := c.ShouldBind(&content); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
+	} else {
+
+		result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), gin.H{"email": content.Email})
+		if err := result.Decode(&user); err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
+			return
+		} else {
+			err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(content.Password))
+			if err != nil {
+				c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Wrong password"})
+				return
+			} else {
+				token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+					"sub": user.ID,
+					"exp": time.Now().Add(time.Hour).Unix(),
+				})
+
+				tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
+
+				if err != nil {
+					c.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": err.Error()})
+				} else {
+					c.IndentedJSON(http.StatusOK, gin.H{
+						"token": tokenString,
+					})
+				}
+
+			}
+		}
 	}
-
-	result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), gin.H{"email": content.Email})
-	if err := result.Decode(&user); err != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
-		return
-	}
-
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(content.Password))
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Wrong password"})
-		return
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.ID,
-		"exp": time.Now().Add(time.Hour).Unix(),
-	})
-
-	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
-
-	c.JSON(http.StatusOK, gin.H{
-		"token": tokenString,
-	})
 
 }
 
