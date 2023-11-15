@@ -13,7 +13,7 @@ set "jsonData={\"Fname\":\"!Fname!\",\"Lname\":\"!Lname!\",\"Password\":\"!Passw
 REM Send the POST request with JSON data
 curl -X POST -H "Content-Type: application/json" -d "%jsonData%" http://localhost:8000/signup/
 
-REM Pause to keep the window open (optional)
+REM Pause to keep the window open 
 pause
 
 endlocal

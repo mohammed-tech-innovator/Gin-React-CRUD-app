@@ -2,6 +2,7 @@ package handelers
 
 import (
 	"backend/dbase"
+	"backend/helpers"
 	"context"
 	"fmt"
 	"net/http"
@@ -28,10 +29,10 @@ func ChangePassword(c *gin.Context) {
 		err := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), bson.M{"email": content.Email}).Decode(&user)
 
 		if err != nil {
-			c.IndentedJSON(http.StatusNotAcceptable, gin.M{"Error": err.Error()})
+			c.IndentedJSON(http.StatusNotAcceptable, bson.M{"Error": err.Error()})
 			return
 		} else {
-			if content.Newpassword1 == content.Newpassword2 {
+			if content.Newpassword1 != content.Newpassword2 {
 				c.IndentedJSON(http.StatusBadRequest, bson.M{"Error": "Re-enter your new password, make it identical."})
 				return
 			} else {
@@ -55,14 +56,14 @@ func ChangePassword(c *gin.Context) {
 							c.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": err.Error()})
 							return
 						} else {
-							c.IndentedJSON(http.StatusAccepted, gin.H{"result": result,
-								"message": fmt.Sprintf("password has been changed to %v", content.Newpassword1)})
+							helpers.SendMailSimple("password change notification", " Your password has been successfully changed. If you initiated this action, no further steps are needed.\nIf you didn't request this change or if you have any concerns, please contact our support team immediately to ensure the security of your account.", []string{user.Email})
+							c.IndentedJSON(http.StatusAccepted, gin.H{"result": result, "message": fmt.Sprintf("password has been changed to %v", content.Newpassword1)})
+
 							return
 						}
 					}
 				}
 			}
 		}
-
 	}
 }

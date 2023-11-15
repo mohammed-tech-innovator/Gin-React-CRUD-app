@@ -12,7 +12,7 @@ set "jsonData={\"Title\":\"!Title!\",\"OwnerID\":\"!OwnerID!\",\"Content\":\"!Co
 REM Send the POST request with JSON data
 curl -X POST -H "Content-Type: application/json" -d "%jsonData%" http://localhost:8000/note/
 
-REM Pause to keep the window open (optional)
+REM Pause to keep the window open 
 pause
 
 endlocal

@@ -138,11 +138,9 @@ func LogIn(c *gin.Context) {
 						"token": tokenString,
 					})
 				}
-
 			}
 		}
 	}
-
 }
 
 func VerifyEmail(c *gin.Context) {

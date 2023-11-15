@@ -36,6 +36,7 @@ func main() {
 	router.DELETE("/note/:id", handelers.DelNote)
 
 	router.GET("/verify-email/:hash/:email", handelers.VerifyEmail)
+	router.PUT("/change-password/", handelers.ChangePassword)
 
 	PORT := os.Getenv("PORT")
 
