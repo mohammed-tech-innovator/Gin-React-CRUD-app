@@ -2,7 +2,7 @@ import React from 'react';
 import SignUp from '../assets/Images/SignUp.jpg';
 import Logo from '../assets/Images/Logo.jpg'
 
-const SignUpForm = () => {
+const SignUpForm = ({handleSubmit,formData,handleInputChange,errorMessage}) => {
   const cascadingRightStyle = {
     marginRight: '-50px',
   };
@@ -47,34 +47,39 @@ const SignUpForm = () => {
                 </div>
                 <h2 className="fw-bold mb-5">Join us today</h2>
                 
-                <form>
+                <form onSubmit={handleSubmit}>
                   {/* 2 column grid layout with text inputs for the first and last names */}
                   <div className="row">
                     <div className="col-md-6 mb-4">
                       <div className="form-outline">
-                        <input type="text" id="form3Example1" className="form-control" placeholder="First name"/>
+                        <input type="text" id="form3Example1" className="form-control" placeholder="First name"
+                        value={formData.Fname} onChange={handleInputChange} name="Fname"/>
                       </div>
                     </div>
                     <div className="col-md-6 mb-4">
                       <div className="form-outline">
-                        <input type="text" id="form3Example2" className="form-control" placeholder="Last name" />
+                        <input type="text" id="form3Example2" className="form-control" placeholder="Last name" 
+                        value={formData.Lname} onChange={handleInputChange} name ="Lname"/>
                       </div>
                     </div>
                   </div>
 
                   {/* Email input */}
                   <div className="form-outline mb-4">
-                    <input type="email" id="form3Example3" placeholder='Email address' className="form-control" />
+                    <input type="email" id="form3Example3" placeholder='Email address' className="form-control"
+                    value = {formData.Email} onChange={handleInputChange} name = "Email" />
                   </div>
 
                   {/* Password input */}
                   <div className="form-outline mb-4">
-                    <input type="password" id="form3Example4" placeholder="Password" className="form-control" />
+                    <input type="password" id="form3Example4" placeholder="Password" className="form-control" 
+                    value={formData.Password} onChange={handleInputChange} name='Password'/>
                     
                   </div>
 
                   <div className="form-outline mb-4">
-                    <input type="password" id="form3Example4" placeholder="Repeat Password" className="form-control" />
+                    <input type="password" id="form3Example4" placeholder="Repeat Password" className="form-control" 
+                    value={formData.RPassword} onChange={handleInputChange} name ="RPassword"/>
                     
                   </div>
 
@@ -85,6 +90,8 @@ const SignUpForm = () => {
                       Remember this device
                     </label>
                   </div>
+
+                  {errorMessage.isError && (<div class="alert alert-warning" role="alert">{errorMessage.message}</div>)}
 
                   {/* Submit button */}
                   <button type="submit" className="btn btn-primary btn-block mb-4">
