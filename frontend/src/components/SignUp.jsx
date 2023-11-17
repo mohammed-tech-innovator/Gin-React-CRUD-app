@@ -2,7 +2,7 @@ import React from 'react';
 import SignUp from '../assets/Images/SignUp.jpg';
 import Logo from '../assets/Images/Logo.jpg'
 
-const SignUpForm = ({handleSubmit,formData,handleInputChange,errorMessage}) => {
+const SignUpForm = ({handleSubmit,formData,handleInputChange,checkBox,errorMessage}) => {
   const cascadingRightStyle = {
     marginRight: '-50px',
   };
@@ -85,7 +85,8 @@ const SignUpForm = ({handleSubmit,formData,handleInputChange,errorMessage}) => {
 
                   {/* Checkbox */}
                   <div className="form-check d-flex justify-content-center mb-4">
-                    <input className="form-check-input me-2" type="checkbox" value="" id="form2Example33" defaultChecked />
+                    <input className="form-check-input me-2" type="checkbox" value="" id="form2Example33" defaultChecked 
+                    checked={formData.RememberDevice} name= "RememberDevice" onClick={checkBox}/>
                     <label className="form-check-label" htmlFor="form2Example33">
                       Remember this device
                     </label>

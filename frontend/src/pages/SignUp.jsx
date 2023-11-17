@@ -64,6 +64,7 @@ export default function SignUp(){
         }));
     }
     return(
-        <SignUpForm errorMessage = {errorMessage} handleSubmit = {handleSubmit} formData = {formData} handleInputChange = {handleInputChange}/>
+        <SignUpForm errorMessage = {errorMessage} handleSubmit = {handleSubmit} formData = {formData}
+        checkBox = {checkBox} handleInputChange = {handleInputChange}/>
     )
 }
