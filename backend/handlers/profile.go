@@ -1,4 +1,4 @@
-package handelers
+package handlers
 
 import (
 	"backend/dbase"

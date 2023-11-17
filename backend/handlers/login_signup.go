@@ -1,4 +1,4 @@
-package handelers
+package handlers
 
 import (
 	"backend/dbase"
@@ -110,18 +110,18 @@ func LogIn(c *gin.Context) {
 	var user dbase.User
 
 	if err := c.ShouldBind(&content); err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error(), "tag": "Bad Data"})
 		return
 	} else {
 
 		result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), gin.H{"email": content.Email})
 		if err := result.Decode(&user); err != nil {
-			c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error()})
+			c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error(), "tag": "No Such User"})
 			return
 		} else {
 			err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(content.Password))
 			if err != nil {
-				c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": "Wrong password"})
+				c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error(), "tag": "Wrong Password"})
 				return
 			} else {
 				token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -132,7 +132,7 @@ func LogIn(c *gin.Context) {
 				tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
 
 				if err != nil {
-					c.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": err.Error()})
+					c.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": err.Error(), "tag": "Couldn't Process Password"})
 				} else {
 					c.IndentedJSON(http.StatusOK, gin.H{
 						"token": tokenString,

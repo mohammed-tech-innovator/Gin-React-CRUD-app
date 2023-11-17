@@ -1,7 +1,7 @@
 package main
 
 import (
-	"backend/handelers"
+	"backend/handlers"
 	"backend/helpers"
 	"os"
 
@@ -22,21 +22,21 @@ func main() {
 	config.AddAllowHeaders("Authorization")
 	router.Use(cors.New(config))
 
-	router.POST("/signup/", handelers.SingUp)
-	router.POST("/login/", handelers.LogIn)
+	router.POST("/signup/", handlers.SingUp)
+	router.POST("/login/", handlers.LogIn)
 
-	router.GET("/profile/:id", handelers.ReadProfile)
-	router.PUT("/profile/:id", handelers.UpdateProfile)
-	router.DELETE("/profile/:id", handelers.DelProfile)
+	router.GET("/profile/:id", handlers.ReadProfile)
+	router.PUT("/profile/:id", handlers.UpdateProfile)
+	router.DELETE("/profile/:id", handlers.DelProfile)
 
-	router.POST("/note/", handelers.CreateNote)
-	router.GET("/note/", handelers.Note)
-	router.GET("/note/:id", handelers.ReadNote)
-	router.PUT("/note/:id", handelers.UpdateNote)
-	router.DELETE("/note/:id", handelers.DelNote)
+	router.POST("/note/", handlers.CreateNote)
+	router.GET("/note/", handlers.Note)
+	router.GET("/note/:id", handlers.ReadNote)
+	router.PUT("/note/:id", handlers.UpdateNote)
+	router.DELETE("/note/:id", handlers.DelNote)
 
-	router.GET("/verify-email/:hash/:email", handelers.VerifyEmail)
-	router.PUT("/change-password/", handelers.ChangePassword)
+	router.GET("/verify-email/:hash/:email", handlers.VerifyEmail)
+	router.PUT("/change-password/", handlers.ChangePassword)
 
 	PORT := os.Getenv("PORT")
 
