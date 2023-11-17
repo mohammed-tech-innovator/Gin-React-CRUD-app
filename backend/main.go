@@ -37,6 +37,7 @@ func main() {
 
 	router.GET("/verify-email/:hash/:email", handlers.VerifyEmail)
 	router.PUT("/change-password/", handlers.ChangePassword)
+	router.POST("/recover/", handlers.RecoverPassword)
 
 	PORT := os.Getenv("PORT")
 

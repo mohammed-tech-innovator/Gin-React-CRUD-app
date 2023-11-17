@@ -112,6 +112,9 @@ const LogInForm = ({submitCallback, formData, handleInputChange, checkBox, error
                     <p>You don't have an account yet ? <a href="/signup/">Create a new account</a></p>
                 </div>
                 </div>
+                <div className='text-center py-2'>
+                  <p>Forgot your password ?<a href='google.com'>Click here</a></p>
+                </div>
             </div>
 
 

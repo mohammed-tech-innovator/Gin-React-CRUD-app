@@ -9,16 +9,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func ChangePassword(c *gin.Context) {
-	var content struct {
-		Email        string
-		Password     string
-		Newpassword1 string
-		Newpassword2 string
-	}
+
+	var content helpers.ChangePasswordForm
 
 	if err := c.ShouldBind(&content); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
@@ -66,4 +63,53 @@ func ChangePassword(c *gin.Context) {
 			}
 		}
 	}
+}
+
+func RecoverPassword(c *gin.Context) {
+
+	var content helpers.RecoverPasswordForm
+
+	if err := c.ShouldBind(&content); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error(), "tag": "⚠️Couldn't fitch data."})
+		return
+	} else if errMessage, tagMessage, err := helpers.CheckRecoverPasswordForm(content); err {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": errMessage, "tag": tagMessage})
+		return
+	} else {
+		result := dbase.DB.Collection(dbase.UserCollection).FindOne(context.Background(), bson.M{"email": content.Email})
+
+		if err := result.Err(); err == mongo.ErrNoDocuments {
+
+			c.IndentedJSON(http.StatusNotFound, gin.H{"Error": err.Error(), "tag": "⚠️No Such Email in Our Database 🛑"})
+
+			return
+
+		} else if err != nil {
+
+			c.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": err.Error(), "tag": "⚠️ An Error occurred ."})
+
+			return
+
+		} else {
+
+			var user dbase.User
+
+			if err := result.Decode(&user); err != nil {
+				c.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": err.Error(), "tag": "⚠️ An Error occurred ."})
+				return
+			} else {
+
+				if user.EmailVerified {
+
+					c.IndentedJSON(http.StatusAccepted, gin.H{"tag": "Recovery Email has been sent."})
+
+				} else {
+					c.IndentedJSON(http.StatusNotAcceptable, gin.H{"Error": "Email is not verified", "tag": "⚠️Your Email is not verified please contact us."})
+				}
+
+			}
+
+		}
+	}
+
 }

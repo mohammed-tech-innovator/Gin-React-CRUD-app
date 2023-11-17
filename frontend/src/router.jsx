@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-
 import NoPage from "./pages/NoPage";
-
+import PWRPage from "./pages/PWRPage";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 
@@ -12,6 +11,10 @@ const router = createBrowserRouter(
             element:<SignUp/>,
         },
         {
+            path:"/recover/",
+            element:<PWRPage/>,
+        },
+        {
             path:"/login/",
             element:<LogIn/>,
         },
@@ -19,6 +22,7 @@ const router = createBrowserRouter(
             path:"*",
             element:<NoPage/>
         },
+        
     ]
 );
 
