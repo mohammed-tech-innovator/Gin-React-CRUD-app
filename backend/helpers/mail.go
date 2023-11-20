@@ -96,6 +96,25 @@ func EmailVerification(name string, email string, url string) {
 	}
 }
 
+func PWRecoveryEmail(name string, email string, url string) {
+	htmlPath := "./static/HTML/PWRecovery.html"
+
+	var body bytes.Buffer
+	template, err := template.ParseFiles(htmlPath)
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+
+		template.Execute(&body, struct {
+			Name  string
+			Email string
+			Url   string
+		}{Name: name, Email: email, Url: url})
+
+		SendMailHTML("Verify Your Email", body.String(), []string{email})
+	}
+}
+
 func StartNotification() {
 	SendMailSimple("Server is Up",
 		fmt.Sprintf("Be attention that your server has stated to work on port :"+os.Getenv("PORT")+"\n time now is : "+time.Now().Format("2006-01-02 15:04:05")+""),

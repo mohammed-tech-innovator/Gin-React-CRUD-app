@@ -68,8 +68,10 @@ func SingUp(c *gin.Context) {
 					emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("VERKEY"), user.Email)))
 					encodedHash := base64.URLEncoding.EncodeToString(emailHashed[:])
 					url := fmt.Sprintf("%sverify-email/%v/%v", os.Getenv("ROOTURL"), encodedHash, user.Email)
-					go helpers.EmailVerification(fmt.Sprintf(user.Fname+" "+user.Lname), user.Email,
-						url)
+
+					defer func() {
+						go helpers.EmailVerification(fmt.Sprintf(user.Fname+" "+user.Lname), user.Email, url)
+					}()
 
 					token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 						"sub": user.ID,

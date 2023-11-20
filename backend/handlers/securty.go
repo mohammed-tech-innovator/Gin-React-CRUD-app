@@ -101,7 +101,11 @@ func RecoverPassword(c *gin.Context) {
 
 				if user.EmailVerified {
 
-					c.IndentedJSON(http.StatusAccepted, gin.H{"tag": "Recovery Email has been sent."})
+					defer func() {
+						go helpers.PWRecoveryEmail(fmt.Sprintf("%v %v", user.Fname, user.Lname), user.Email, "google.com")
+					}()
+
+					c.IndentedJSON(http.StatusAccepted, gin.H{"tag": "Recovery Email has been sent, please check your email."})
 
 				} else {
 					c.IndentedJSON(http.StatusNotAcceptable, gin.H{"Error": "Email is not verified", "tag": "⚠️Your Email is not verified please contact us."})

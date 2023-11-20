@@ -10,6 +10,10 @@ export default function PWRPage() {
         message:"",
         isError:false,
     })
+    const [sucMessage ,setSucMessage] = useState({
+        message:"",
+        isSuc:false,
+    })
     const handleSubmit = async (e) => {
         e.preventDefault()
         let response;
@@ -20,11 +24,19 @@ export default function PWRPage() {
                 message: '',
                 isError: false,
             }))
+            setSucMessage( ()=> ({
+                message:response.data.tag,
+                isSuc: true,
+            }))
         } catch(err){
             console.log(`Error:${err.message},${err.response.data.Error}`)
             setErrorMessage(() => ({
                 message: err.response.data.tag,
                 isError: true,
+            }))
+            setSucMessage( ()=> ({
+                message:'',
+                isSuc: false,
             }))
         }
         
@@ -40,7 +52,8 @@ export default function PWRPage() {
     
   return(
     <>
-        <PWrecovery handleSubmit = {handleSubmit} formData = {formData} handleInputChange={handleInputChange} errorMessage={errorMessage}/>
+        <PWrecovery handleSubmit = {handleSubmit} formData = {formData} handleInputChange={handleInputChange} errorMessage={errorMessage}
+        sucMessage={sucMessage}/>
     </> 
     )
 }

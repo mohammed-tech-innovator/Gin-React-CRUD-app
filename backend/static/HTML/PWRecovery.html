@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recovery Email</title>
+  <meta name="description" content="Account recovery email template">
+  <meta name="keywords" content="HTML, tutorial, template">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #007bff;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.2em;
+      color: #555;
+    }
+
+    main {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h4 {
+      font-size: 1.1em;
+      color: #444;
+      margin-bottom: 15px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Recovery Email</h1>
+    <h3>Please don't share this email with anyone.</h3>
+  </header>
+
+  <main>
+    <section>
+      <h4>Hello {{.Name}},</h4>
+      <h4>The process of your account recovery has been initiated. If you didn't initiate the process, no action is needed. However, if you did, click the following link to proceed:</h4>
+      <p><a href={{.Url}} >Click here</a></p>
+    </section>
+  </main>
+</body>
+</html>

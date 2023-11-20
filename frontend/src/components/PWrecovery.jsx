@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from '../assets/Images/Logo.jpg'
 
-export default function PWrecovery({handleSubmit,formData,handleInputChange,errorMessage}) {
+export default function PWrecovery({handleSubmit,formData,handleInputChange,errorMessage,sucMessage}) {
     const cascadingStyle = {
       };
     
@@ -45,6 +45,7 @@ export default function PWrecovery({handleSubmit,formData,handleInputChange,erro
                                     
 
                                         {errorMessage.isError && (<div class="alert alert-warning" role="alert">{errorMessage.message}</div>)}
+                                        {sucMessage.isSuc && (<div class="alert alert-success" role="alert">{sucMessage.message}</div>)}
                                         
 
                                         {/* Submit button */}
