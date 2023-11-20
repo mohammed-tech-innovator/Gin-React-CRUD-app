@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from '../assets/Images/Logo.jpg'
 
-export default function PWRC({handleSubmit,formData,handleInputChange,errorMessage}) {
+export default function PWRC({handleSubmit,formData,handleInputChange,errorMessage,sucMessage}) {
     const cascadingStyle = {
       };
     
@@ -27,7 +27,7 @@ export default function PWRC({handleSubmit,formData,handleInputChange,errorMessa
                                         Now you can reset your password 😎.
                                     </p>
 
-                                    <form onSubmit={handleSubmit}>
+                                    {!sucMessage.isSuc&&(<form onSubmit={handleSubmit}>
                                         {/* password input */}
                                         <div className="form-outline mb-4">
                                             <input type="password" id="form3Example4" placeholder="New Password" className="form-control" 
@@ -41,7 +41,7 @@ export default function PWRC({handleSubmit,formData,handleInputChange,errorMessa
                                             
                                         </div>
 
-                                        <p>{errorMessage.isError}</p>
+                                        
                                     
                                         {errorMessage.isError && (<div class="alert alert-warning" role="alert">{errorMessage.message}</div>)}
 
@@ -49,7 +49,8 @@ export default function PWRC({handleSubmit,formData,handleInputChange,errorMessa
                                         <button type="submit" className="btn btn-outline-primary btn-block mb-4">
                                             Reset My Password
                                         </button>
-                                    </form>
+                                    </form>)}
+                                    {sucMessage.isSuc && (<div class="alert alert-success" role="alert">{sucMessage.message}</div>)}
                                 </div>
                             </div>
                             <div className="text-center">

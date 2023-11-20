@@ -131,3 +131,20 @@ func TerminationNotification(err error) {
 
 	return
 }
+
+func PWRCEmail(email, url string) {
+	htmlPath := "./static/HTML/PWRC.html"
+
+	var body bytes.Buffer
+	template, err := template.ParseFiles(htmlPath)
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+
+		template.Execute(&body, struct {
+			Url string
+		}{Url: url})
+
+		SendMailHTML("Verify Your Email", body.String(), []string{email})
+	}
+}

@@ -23,18 +23,29 @@ export default function PWRchange() {
             isError:false,
         }
     );
+    const [sucMessage ,setSucMessage] = useState(
+    {
+        message:"",
+        isSuc:false,
+    }
+    );
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         let response;
         try {
 
-            response = await api.post("/recovery/" + hash +"/"+email,formData)
+            response = await api.post("/recovery/" + hash +"/"+email,formData);
     
             setErrorMessage(() => ({
                 message: '',
                 isError: false,
-            }))
+            }));
+
+            setSucMessage( ()=> ({
+                message:response.data.tag,
+                isSuc: true,
+            }));
             
 
         } catch (err) {
@@ -43,7 +54,12 @@ export default function PWRchange() {
             setErrorMessage(() => ({
                 message: err.response.data.tag,
                 isError: true,
-            }))
+            }));
+
+            setSucMessage( ()=> ({
+                message:'',
+                isSuc: false,
+            }));
 
         }
     };
@@ -59,5 +75,5 @@ export default function PWRchange() {
     };
 
     return(<PWRC handleSubmit = {handleSubmit} formData = {formData} handleInputChange={handleInputChange} 
-    errorMessage = {errorMessage} />);
+    errorMessage = {errorMessage} sucMessage={sucMessage}/>);
 }

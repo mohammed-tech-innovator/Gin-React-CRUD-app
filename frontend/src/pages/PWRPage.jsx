@@ -19,7 +19,7 @@ export default function PWRPage() {
         let response;
         try{
             response = await api.post("/recover/",formData)
-            console.log(response.data)
+
             setErrorMessage(() => ({
                 message: '',
                 isError: false,
@@ -33,11 +33,11 @@ export default function PWRPage() {
             setErrorMessage(() => ({
                 message: err.response.data.tag,
                 isError: true,
-            }))
+            }));
             setSucMessage( ()=> ({
                 message:'',
                 isSuc: false,
-            }))
+            }));
         }
         
     }

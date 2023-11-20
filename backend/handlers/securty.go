@@ -160,9 +160,7 @@ func ChangeRecoverdPassword(c *gin.Context) {
 					return
 				} else {
 					defer func() {
-						go helpers.SendMailSimple("Password was changed successfully.",
-							"Hello, we would like to notify you that your password has been successfuly changed please log in with your new password",
-							[]string{email})
+						go helpers.PWRCEmail(email, fmt.Sprintf("%s/%s", os.Getenv("FEROOTURL"), "login/"))
 					}()
 					c.IndentedJSON(http.StatusAccepted, bson.M{"result": result, "tag": "password has been updated successfuly👌."})
 					return

@@ -27,7 +27,7 @@ export default function PWrecovery({handleSubmit,formData,handleInputChange,erro
                                         If your email is verified, we can recover your account.
                                     </p>
 
-                                    <form onSubmit={handleSubmit}>
+                                    {!sucMessage.isSuc&&(<form onSubmit={handleSubmit}>
                                         {/* Email input */}
                                         <div className="form-outline mb-4">
                                             <input
@@ -43,14 +43,15 @@ export default function PWrecovery({handleSubmit,formData,handleInputChange,erro
                                     
 
                                         {errorMessage.isError && (<div class="alert alert-warning" role="alert">{errorMessage.message}</div>)}
-                                        {sucMessage.isSuc && (<div class="alert alert-success" role="alert">{sucMessage.message}</div>)}
+                                        
                                         
 
                                         {/* Submit button */}
                                         <button type="submit" className="btn btn-outline-primary btn-block mb-4">
                                             Send me Recovory Email
                                         </button>
-                                    </form>
+                                    </form>)}
+                                    {sucMessage.isSuc && (<div class="alert alert-success" role="alert">{sucMessage.message}</div>)}
                                 </div>
                             </div>
                             <div className="text-center">
