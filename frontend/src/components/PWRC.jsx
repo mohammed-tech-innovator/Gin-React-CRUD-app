@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from '../assets/Images/Logo.jpg'
 
-export default function PWrecovery({handleSubmit,formData,handleInputChange,errorMessage,sucMessage}) {
+export default function PWRC({handleSubmit,formData,handleInputChange,errorMessage}) {
     const cascadingStyle = {
       };
     
@@ -21,34 +21,33 @@ export default function PWrecovery({handleSubmit,formData,handleInputChange,erro
                                             <img src={Logo} className="w-100 rounded-4 shadow-4" alt="" />
                                         </div>
                                     </div>
-                                    <h2 className="fw-bold mb-5">Oops</h2>
+                                    <h2 className="fw-bold mb-5">Account Recovery</h2>
 
                                     <p>
-                                        If your email is verified, we can recover your account.
+                                        Now you can reset your password 😎.
                                     </p>
 
                                     <form onSubmit={handleSubmit}>
-                                        {/* Email input */}
+                                        {/* password input */}
                                         <div className="form-outline mb-4">
-                                            <input
-                                                type="email"
-                                                id="form3Example3"
-                                                placeholder="Email address"
-                                                className="form-control"
-                                                value={formData.Email}
-                                                onChange={handleInputChange}
-                                                name="Email"
-                                            />
+                                            <input type="password" id="form3Example4" placeholder="New Password" className="form-control" 
+                                            value={formData.NPassword1} onChange={handleInputChange} name='NPassword1'/>
+                                            
                                         </div>
-                                    
+                                        {/* password input */}
+                                        <div className="form-outline mb-4">
+                                            <input type="password" id="form3Example3" placeholder="Repeat New Password" className="form-control" 
+                                            value={formData.NPassword2} onChange={handleInputChange} name='NPassword2'/>
+                                            
+                                        </div>
 
+                                        <p>{errorMessage.isError}</p>
+                                    
                                         {errorMessage.isError && (<div class="alert alert-warning" role="alert">{errorMessage.message}</div>)}
-                                        {sucMessage.isSuc && (<div class="alert alert-success" role="alert">{sucMessage.message}</div>)}
-                                        
 
                                         {/* Submit button */}
                                         <button type="submit" className="btn btn-outline-primary btn-block mb-4">
-                                            Send me Recovory Email
+                                            Reset My Password
                                         </button>
                                     </form>
                                 </div>
