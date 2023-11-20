@@ -4,8 +4,12 @@ import (
 	"backend/dbase"
 	"backend/helpers"
 	"context"
+	"crypto/sha256"
+	"crypto/subtle"
+	"encoding/base64"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -101,8 +105,12 @@ func RecoverPassword(c *gin.Context) {
 
 				if user.EmailVerified {
 
+					emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("VERKEY"), user.Email)))
+					encodedHash := base64.URLEncoding.EncodeToString(emailHashed[:])
+					url := fmt.Sprintf("%srecovery/%v/%v", os.Getenv("ROOTURL"), encodedHash, user.Email)
+
 					defer func() {
-						go helpers.PWRecoveryEmail(fmt.Sprintf("%v %v", user.Fname, user.Lname), user.Email, "google.com")
+						go helpers.PWRecoveryEmail(fmt.Sprintf("%v %v", user.Fname, user.Lname), user.Email, url)
 					}()
 
 					c.IndentedJSON(http.StatusAccepted, gin.H{"tag": "Recovery Email has been sent, please check your email."})
@@ -114,6 +122,58 @@ func RecoverPassword(c *gin.Context) {
 			}
 
 		}
+	}
+
+}
+
+func ChangeRecoverdPassword(c *gin.Context) {
+
+	hash := c.Param("hash")
+	email := c.Param("email")
+
+	emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("VERKEY"), email)))
+	encodedHash := base64.URLEncoding.EncodeToString(emailHashed[:])
+
+	if subtle.ConstantTimeCompare([]byte(hash), []byte(encodedHash)) == 1 {
+
+		var pwcr helpers.PWCR
+
+		if err := c.ShouldBind(&pwcr); err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error(),
+				"tag": "⚠️ An error occurred while processing the request."})
+			return
+		} else if errMessage, tagMessage, err := helpers.CheckPWCR(pwcr); err {
+			c.IndentedJSON(http.StatusBadRequest, bson.M{"Error": errMessage, "tag": tagMessage})
+			return
+		} else {
+
+			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(pwcr.NPassword1), 10)
+			if err != nil {
+				c.IndentedJSON(http.StatusInternalServerError, gin.H{"Error": err.Error(), "tag": "🛑please try again."})
+				return
+			} else {
+				result, err := dbase.DB.Collection(dbase.UserCollection).UpdateOne(context.Background(),
+					bson.M{"email": email}, bson.M{"$set": bson.M{"password": string(hashedPassword)}})
+
+				if err != nil {
+					c.IndentedJSON(http.StatusNotFound, bson.M{"Error": err.Error(), "tag": "⚠️ no such user."})
+					return
+				} else {
+					defer func() {
+						go helpers.SendMailSimple("Password was changed successfully.",
+							"Hello, we would like to notify you that your password has been successfuly changed please log in with your new password",
+							[]string{email})
+					}()
+					c.IndentedJSON(http.StatusAccepted, bson.M{"result": result, "tag": "password has been updated successfuly👌."})
+					return
+				}
+			}
+
+		}
+
+	} else {
+		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"Error": "Access has been denaid", "tag": fmt.Sprintf("Your access has been denaied%v : %v", hash, emailHashed)})
+		return
 	}
 
 }

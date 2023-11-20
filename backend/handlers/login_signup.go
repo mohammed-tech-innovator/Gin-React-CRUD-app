@@ -167,7 +167,7 @@ func VerifyEmail(c *gin.Context) {
 		}
 
 	} else {
-		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"Error": fmt.Sprintf("Your access has been denaied%v : %v", hash, emailHashed)})
+		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"Error": "Access has been denaid", "tag": fmt.Sprintf("Your access has been denaied%v : %v", hash, emailHashed)})
 	}
 
 }
