@@ -9,9 +9,8 @@ export default function SignUp(){
         e.preventDefault()
         let response;
         try {
-
+            console.log(formData)
             response = await api.post("/signup/",formData)
-            console.log(response.data)
             setErrorMessage(() => ({
                 message: '',
                 isError: false,

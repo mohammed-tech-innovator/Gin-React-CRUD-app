@@ -78,7 +78,7 @@ const SignUpForm = ({handleSubmit,formData,handleInputChange,checkBox,errorMessa
                   </div>
 
                   <div className="form-outline mb-4">
-                    <input type="password" id="form3Example4" placeholder="Repeat Password" className="form-control" 
+                    <input type="password" id="form3Example5" placeholder="Repeat Password" className="form-control" 
                     value={formData.RPassword} onChange={handleInputChange} name ="RPassword"/>
                     
                   </div>
@@ -86,13 +86,13 @@ const SignUpForm = ({handleSubmit,formData,handleInputChange,checkBox,errorMessa
                   {/* Checkbox */}
                   <div className="form-check d-flex justify-content-center mb-4">
                     <input className="form-check-input me-2" type="checkbox" value="" id="form2Example33" defaultChecked 
-                    checked={formData.RememberDevice} name= "RememberDevice" onClick={checkBox}/>
+                    checked={formData.RememberDevice} name= "RememberDevice" onChange={checkBox}/>
                     <label className="form-check-label" htmlFor="form2Example33">
                       Remember this device
                     </label>
                   </div>
 
-                  {errorMessage.isError && (<div class="alert alert-warning" role="alert">{errorMessage.message}</div>)}
+                  {errorMessage.isError && (<div className="alert alert-warning" role="alert">{errorMessage.message}</div>)}
 
                   {/* Submit button */}
                   <button type="submit" className="btn btn-primary btn-block mb-4">

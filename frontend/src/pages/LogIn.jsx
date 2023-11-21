@@ -8,9 +8,9 @@ export default function LogIn() {
         e.preventDefault()
         let response;
         try {
-
+            console.log(formData)
             response = await api.post("/login/",formData)
-            console.log(response.data)
+            
             setErrorMessage(() => ({
                 message: '',
                 isError: false,
