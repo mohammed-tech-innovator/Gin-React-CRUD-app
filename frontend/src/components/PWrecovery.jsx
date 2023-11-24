@@ -42,7 +42,7 @@ export default function PWrecovery({handleSubmit,formData,handleInputChange,erro
                                         </div>
                                     
 
-                                        {errorMessage.isError && (<div class="alert alert-warning" role="alert">{errorMessage.message}</div>)}
+                                        {errorMessage.isError && (<div className="alert alert-warning" role="alert">{errorMessage.message}</div>)}
                                         
                                         
 
@@ -51,7 +51,7 @@ export default function PWrecovery({handleSubmit,formData,handleInputChange,erro
                                             Send me Recovory Email
                                         </button>
                                     </form>)}
-                                    {sucMessage.isSuc && (<div class="alert alert-success" role="alert">{sucMessage.message}</div>)}
+                                    {sucMessage.isSuc && (<div className="alert alert-success" role="alert">{sucMessage.message}</div>)}
                                 </div>
                             </div>
                             <div className="text-center">

@@ -114,7 +114,7 @@ const LogInForm = ({submitCallback, formData, handleInputChange, checkBox, error
                 </div>
                 </div>
                 <div className='text-center py-2'>
-                  <p>Forgot your password ?<a href='google.com'>Click here</a></p>
+                  <p>Forgot your password ?<a href="/recover/">Click here</a></p>
                 </div>
             </div>
 

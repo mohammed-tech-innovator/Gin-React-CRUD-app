@@ -3,18 +3,22 @@ import api from '../api/Api'
 import LogInForm from "../components/LogIn";
 
 
+
 export default function LogIn() {
+    
+    
     const handleSubmit = async (e) => {
         e.preventDefault()
         let response;
         try {
             console.log(formData)
             response = await api.post("/login/",formData)
-            
             setErrorMessage(() => ({
                 message: '',
                 isError: false,
             }))
+
+            window.location.href = "/"
             
 
         } catch (err) {

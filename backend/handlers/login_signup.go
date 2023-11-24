@@ -67,7 +67,7 @@ func SingUp(c *gin.Context) {
 				} else {
 					emailHashed := sha256.Sum256([]byte(fmt.Sprintf("%s%s", os.Getenv("VERKEY"), user.Email)))
 					encodedHash := base64.URLEncoding.EncodeToString(emailHashed[:])
-					url := fmt.Sprintf("%sverify-email/%v/%v", os.Getenv("FEROOTURL"), encodedHash, user.Email)
+					url := fmt.Sprintf("%sverify-email/%v/%v/", os.Getenv("FEROOTURL"), encodedHash, user.Email)
 
 					defer func() {
 						go helpers.EmailVerification(fmt.Sprintf(user.Fname+" "+user.Lname), user.Email, url)
@@ -160,14 +160,16 @@ func VerifyEmail(c *gin.Context) {
 		)
 
 		if err != nil {
-			c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"Error": err.Error(), "tag": "An Error Occurred 🛑."})
 			return
 		} else {
-			c.IndentedJSON(http.StatusAccepted, gin.H{"result": result})
+			c.IndentedJSON(http.StatusAccepted, gin.H{"result": result, "tag": "Your Email has been verified🤝."})
+			return
 		}
 
 	} else {
-		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"Error": "Access has been denaid", "tag": fmt.Sprintf("Your access has been denaied%v : %v", hash, emailHashed)})
+		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"Error": "Access has been denaid", "tag": fmt.Sprintf("Your access has been denaied'%v' : %s", hash, email)})
+		return
 	}
 
 }

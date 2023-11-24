@@ -7,8 +7,6 @@ export default function PWRchange() {
 
     const {hash,email} = useParams();
 
-    console.log(typeof hash)
-    console.log(typeof email)
 
     const [formData,setFormData] = useState(
         {

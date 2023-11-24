@@ -23,9 +23,7 @@ export default function PWRC({handleSubmit,formData,handleInputChange,errorMessa
                                     </div>
                                     <h2 className="fw-bold mb-5">Account Recovery</h2>
 
-                                    <p>
-                                        Now you can reset your password 😎.
-                                    </p>
+                                    {!sucMessage.isSuc&&(<p>Now you can reset your password 😎.</p>) || sucMessage.isSuc&&(<p>Now you can LogIn with your new password🤝.</p>)}
 
                                     {!sucMessage.isSuc&&(<form onSubmit={handleSubmit}>
                                         {/* password input */}

@@ -9,9 +9,12 @@
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
-            margin: 0;
+            margin: 10px;
             padding: 0;
             background-color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .container {
@@ -20,6 +23,7 @@
             justify-content: center;
             height: 100vh;
             background-color: #f4f4f4;
+            width: 100%;
         }
 
         .content {
@@ -56,13 +60,13 @@
     <div class="container">
         <div class="content">
             <h1>Password Change Notification</h1>
-            <p>Hello,{.Name}</p>
-            <p>We would like to notify you that your password has been successfully changed. Please log in with your new password.</p>
+            <h4>Hello</h4>
+            <h4>We would like to notify you that your password has been successfully changed. Please log in with your new password.</h4>
 
-            <p>If you have any questions or concerns, please contact our support team.</p>
+            <h4>If you have any questions or concerns, please contact our support team.</h4>
 
-            <!-- Optional: Add a button for login -->
-            <a class="button" href={.Url}>Log In</a>
+
+            <a class="button" href= {{.Url}} >Log In</a>
         </div>
     </div>
 </body>
